@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../services/api';
+import { useAuthStore } from '../../store/authStore';
 import PaymentRow from '../../components/dashboard/PaymentRow';
 import StatsCard from '../../components/dashboard/StatsCard';
 import LoadingSpinner from '../../components/shared/LoadingSpinner';
@@ -8,6 +9,7 @@ import { DollarSign, Clock, AlertCircle } from 'lucide-react';
 import { formatCLP } from '../../utils/formatCLP';
 
 const PaymentsPage = () => {
+  const isDemoMode = useAuthStore(state => state.isDemoMode);
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -16,6 +18,17 @@ const PaymentsPage = () => {
   const [filter, setFilter] = useState('all');
 
   const fetchPayments = async () => {
+    if (isDemoMode) {
+      const data = [
+        { id: '1', property_address: 'Av. Providencia 1234 Depto 52', amount: 550000, period_month: 1, period_year: 2025, due_date: '2025-01-05', status: 'paid' },
+        { id: '2', property_address: 'Av. Providencia 1234 Depto 52', amount: 550000, period_month: 2, period_year: 2025, due_date: '2025-02-05', status: 'paid' },
+        { id: '3', property_address: 'Av. Providencia 1234 Depto 52', amount: 550000, period_month: 6, period_year: 2025, due_date: '2025-06-05', status: 'pending' }
+      ];
+      setPayments(data);
+      setStats({ collected: 1100000, pending: 550000, overdue: 0 });
+      setLoading(false);
+      return;
+    }
     try {
       const res = await api.get('/payments');
       const data = res.data;
@@ -35,7 +48,7 @@ const PaymentsPage = () => {
 
   useEffect(() => {
     fetchPayments();
-  }, []);
+  }, [isDemoMode]);
 
   const handleGenerateLink = async (id) => {
     try {
@@ -64,6 +77,12 @@ const PaymentsPage = () => {
 
   return (
     <div className="space-y-8 animate-fade-in">
+      {isDemoMode && (
+        <div className="bg-gold/10 border-2 border-gold/20 p-4 rounded-xl flex items-center gap-3 text-gold">
+          <AlertCircle size={20} />
+          <p className="text-sm font-bold uppercase tracking-tight">Modo Demo: Solo lectura.</p>
+        </div>
+      )}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <StatsCard title="Total recaudado" value={formatCLP(stats.collected)} icon={<DollarSign size={24} />} color="success" />
         <StatsCard title="Total pendiente" value={formatCLP(stats.pending)} icon={<Clock size={24} />} color="warning" />

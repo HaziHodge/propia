@@ -8,9 +8,18 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#2563EB',
-          dark: '#1D4ED8',
+          DEFAULT: '#1B4F72',
+          dark: '#154360',
+          light: '#2980B9',
         },
+        gold: {
+          DEFAULT: '#F39C12',
+          light: '#F8C471',
+        },
+        dark: '#0D1B2A',
+        'gray-soft': '#F0F4F8',
+        'text-main': '#1A1A2E',
+        'text-muted': '#5D6D7E',
         success: '#16A34A',
         warning: '#D97706',
         danger: '#DC2626',
@@ -20,6 +29,7 @@ export default {
       },
       fontFamily: {
         inter: ['Inter', 'sans-serif'],
+        playfair: ['"Playfair Display"', 'serif'],
       },
     },
   },

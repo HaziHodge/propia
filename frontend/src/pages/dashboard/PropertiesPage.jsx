@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../services/api';
+import { useAuthStore } from '../../store/authStore';
+import { AlertCircle } from 'lucide-react';
 import PropertyCard from '../../components/dashboard/PropertyCard';
 import PropertyForm from '../../components/dashboard/PropertyForm';
 import Modal from '../../components/shared/Modal';
@@ -9,6 +11,7 @@ import { Plus, Building } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const PropertiesPage = () => {
+  const isDemoMode = useAuthStore(state => state.isDemoMode);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,6 +20,14 @@ const PropertiesPage = () => {
   const navigate = useNavigate();
 
   const fetchProperties = async () => {
+    if (isDemoMode) {
+      setProperties([
+        { id: '1', address: 'Av. Providencia 1234 Depto 52', commune: 'Providencia', region: 'RM', property_type: 'departamento', bedrooms: 2, bathrooms: 1, area_m2: 65, active_contract_status: 'active' },
+        { id: '2', address: 'Los Leones 456 Casa 3', commune: 'Las Condes', region: 'RM', property_type: 'casa', bedrooms: 3, bathrooms: 2, area_m2: 120 }
+      ]);
+      setLoading(false);
+      return;
+    }
     try {
       const res = await api.get('/properties');
       setProperties(res.data);
@@ -29,7 +40,7 @@ const PropertiesPage = () => {
 
   useEffect(() => {
     fetchProperties();
-  }, []);
+  }, [isDemoMode]);
 
   const handleCreateProperty = async (data) => {
     setSubmitting(true);
@@ -52,6 +63,12 @@ const PropertiesPage = () => {
 
   return (
     <div className="space-y-8 animate-fade-in">
+      {isDemoMode && (
+        <div className="bg-gold/10 border-2 border-gold/20 p-4 rounded-xl flex items-center gap-3 text-gold">
+          <AlertCircle size={20} />
+          <p className="text-sm font-bold uppercase tracking-tight">Modo Demo: Solo lectura.</p>
+        </div>
+      )}
       <div className="flex justify-between items-center">
         <div>
           <p className="text-slate-500 font-medium">Administra tus bienes inmuebles</p>

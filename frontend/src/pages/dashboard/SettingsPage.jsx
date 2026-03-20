@@ -3,9 +3,10 @@ import api from '../../services/api';
 import { useAuthStore } from '../../store/authStore';
 import Toast from '../../components/shared/Toast';
 import LoadingSpinner from '../../components/shared/LoadingSpinner';
-import { CreditCard, Check, Shield } from 'lucide-react';
+import { CreditCard, Check, Shield, AlertCircle } from 'lucide-react';
 
 const SettingsPage = () => {
+  const isDemoMode = useAuthStore(state => state.isDemoMode);
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -14,6 +15,15 @@ const SettingsPage = () => {
 
   useEffect(() => {
     const fetchPlans = async () => {
+      if (isDemoMode) {
+        setPlans([
+          { id: 'basic', name: 'Básico', price: 19900, features: ['1 propiedad', 'Contrato digital', 'Cobro con Khipu'] },
+          { id: 'pro', name: 'Pro', price: 34900, features: ['Hasta 3 propiedades', 'Historial completo', 'Alertas de mora'] },
+          { id: 'investor', name: 'Inversor', price: 59900, features: ['Hasta 10 propiedades', 'Reportes exportables', 'API access'] }
+        ]);
+        setLoading(false);
+        return;
+      }
       try {
         const res = await api.get('/subscriptions/plans');
         setPlans(res.data);
@@ -24,7 +34,7 @@ const SettingsPage = () => {
       }
     };
     fetchPlans();
-  }, []);
+  }, [isDemoMode]);
 
   const handleSubscribe = async (planId) => {
     setSubmitting(true);
@@ -41,6 +51,12 @@ const SettingsPage = () => {
 
   return (
     <div className="space-y-12 animate-fade-in max-w-5xl mx-auto">
+      {isDemoMode && (
+        <div className="bg-gold/10 border-2 border-gold/20 p-4 rounded-xl flex items-center gap-3 text-gold">
+          <AlertCircle size={20} />
+          <p className="text-sm font-bold uppercase tracking-tight">Modo Demo: Solo lectura.</p>
+        </div>
+      )}
       <section>
         <h3 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2 italic">
           <Shield size={24} className="text-primary" /> Tu Plan Actual

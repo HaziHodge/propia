@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../services/api';
 import StatsCard from '../../components/dashboard/StatsCard';
-import { Building, FileText, DollarSign, Clock, ExternalLink } from 'lucide-react';
+import { Building, FileText, DollarSign, Clock, ExternalLink, AlertCircle } from 'lucide-react';
+import { useAuthStore } from '../../store/authStore';
 import { formatCLP } from '../../utils/formatCLP';
 import { formatDate } from '../../utils/formatDate';
 import LoadingSpinner from '../../components/shared/LoadingSpinner';
 import Toast from '../../components/shared/Toast';
 
 const DashboardHome = () => {
+  const isDemoMode = useAuthStore(state => state.isDemoMode);
   const [stats, setStats] = useState({ properties: 0, contracts: 0, collected: 0, pending: 0 });
   const [recentPayments, setRecentPayments] = useState([]);
   const [pendingContracts, setPendingContracts] = useState([]);
@@ -16,6 +18,15 @@ const DashboardHome = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      if (isDemoMode) {
+        setStats({ properties: 2, contracts: 1, collected: 550000, pending: 550000 });
+        setRecentPayments([
+          { id: '1', property_address: 'Av. Providencia 1234 Depto 52', amount: 550000, due_date: '2025-07-05' }
+        ]);
+        setPendingContracts([]);
+        setLoading(false);
+        return;
+      }
       try {
         const [propsRes, contractsRes, paymentsRes] = await Promise.all([
           api.get('/properties'),
@@ -26,7 +37,7 @@ const DashboardHome = () => {
         const activeProps = propsRes.data.length;
         const activeContracts = contractsRes.data.filter(c => c.status === 'active').length;
 
-        const collected = 1250000; // Mocked for display
+        const collected = 1250000;
         const pending = paymentsRes.data.reduce((sum, p) => sum + p.amount, 0);
 
         setStats({ properties: activeProps, contracts: activeContracts, collected, pending });
@@ -39,7 +50,7 @@ const DashboardHome = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [isDemoMode]);
 
   const handleGenerateLink = async (paymentId) => {
     try {
@@ -54,6 +65,12 @@ const DashboardHome = () => {
 
   return (
     <div className="space-y-8 animate-fade-in">
+      {isDemoMode && (
+        <div className="bg-gold/10 border-2 border-gold/20 p-4 rounded-xl flex items-center gap-3 text-gold">
+          <AlertCircle size={20} />
+          <p className="text-sm font-bold uppercase tracking-tight">Estás en Modo Demo. Los datos mostrados son de ejemplo y no se realizarán llamadas a la API.</p>
+        </div>
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatsCard title="Propiedades activas" value={stats.properties} icon={<Building size={24} />} color="primary" />
         <StatsCard title="Contratos activos" value={stats.contracts} icon={<FileText size={24} />} color="success" />

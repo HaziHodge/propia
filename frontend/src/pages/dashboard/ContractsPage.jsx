@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../services/api';
+import { useAuthStore } from '../../store/authStore';
+import { AlertCircle } from 'lucide-react';
 import ContractCard from '../../components/dashboard/ContractCard';
 import ContractForm from '../../components/dashboard/ContractForm';
 import Modal from '../../components/shared/Modal';
@@ -9,6 +11,7 @@ import { Plus, FileText } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 
 const ContractsPage = () => {
+  const isDemoMode = useAuthStore(state => state.isDemoMode);
   const [contracts, setContracts] = useState([]);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,6 +24,17 @@ const ContractsPage = () => {
   const location = useLocation();
 
   const fetchData = async () => {
+    if (isDemoMode) {
+      setContracts([
+        { id: '1', property_address: 'Av. Providencia 1234 Depto 52', tenant_name: 'María González', tenant_email: 'maria@example.com', rent_amount: 550000, payment_day: 5, start_date: '2025-01-01', end_date: '2025-12-31', status: 'active' }
+      ]);
+      setProperties([
+        { id: '1', address: 'Av. Providencia 1234 Depto 52', active_contract_status: 'active' },
+        { id: '2', address: 'Los Leones 456 Casa 3' }
+      ]);
+      setLoading(false);
+      return;
+    }
     try {
       const [contractsRes, propsRes] = await Promise.all([
         api.get('/contracts'),
@@ -86,6 +100,12 @@ const ContractsPage = () => {
 
   return (
     <div className="space-y-8 animate-fade-in">
+      {isDemoMode && (
+        <div className="bg-gold/10 border-2 border-gold/20 p-4 rounded-xl flex items-center gap-3 text-gold">
+          <AlertCircle size={20} />
+          <p className="text-sm font-bold uppercase tracking-tight">Modo Demo: Solo lectura.</p>
+        </div>
+      )}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="flex bg-white p-1 rounded-xl border border-slate-200 shadow-sm">
           {['all', 'active', 'pending_signature', 'terminated'].map((f) => (
