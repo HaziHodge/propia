@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: 'Inter', sans-serif; line-height: 1.6; color: #0F172A; margin: 0; padding: 0; }
+        .container { max-width: 800px; margin: auto; padding: 20px; }
+        h1 { text-align: center; text-transform: uppercase; font-size: 24px; border-bottom: 2px solid #E2E8F0; padding-bottom: 10px; }
+        section { margin-bottom: 20px; }
+        h2 { font-size: 18px; color: #1E293B; border-bottom: 1px solid #E2E8F0; }
+        .footer { text-align: center; font-size: 12px; color: #64748B; margin-top: 50px; }
+        .signature-container { display: flex; justify-content: space-between; margin-top: 100px; }
+        .signature-box { width: 45%; border-top: 1px solid #000; text-align: center; padding-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Contrato de Arrendamiento</h1>
+
+        <section>
+            <h2>1. Identificación de las Partes</h2>
+            <p><strong>ARRENDADOR:</strong> {{OWNER_NAME}}, RUT: {{OWNER_RUT}}.</p>
+            <p><strong>ARRENDATARIO:</strong> {{TENANT_NAME}}, RUT: {{TENANT_RUT}}.</p>
+        </section>
+
+        <section>
+            <h2>2. Objeto del Contrato</h2>
+            <p>El Arrendador entrega en arriendo la propiedad ubicada en: <strong>{{PROPERTY_ADDRESS}}</strong>.</p>
+        </section>
+
+        <section>
+            <h2>3. Vigencia</h2>
+            <p>El presente contrato tendrá una duración que comienza el <strong>{{START_DATE}}</strong> y termina el <strong>{{END_DATE}}</strong>.</p>
+        </section>
+
+        <section>
+            <h2>4. Canon de Arrendamiento</h2>
+            <p>La renta mensual será de <strong>{{RENT_AMOUNT_FORMATTED}} {{RENT_CURRENCY}}</strong>, la cual deberá ser pagada los días <strong>{{PAYMENT_DAY}}</strong> de cada mes.</p>
+        </section>
+
+        <section>
+            <h2>5. Garantía</h2>
+            <p>El Arrendatario hace entrega de la suma de <strong>{{DEPOSIT_AMOUNT}}</strong> en concepto de garantía.</p>
+        </section>
+
+        <section>
+            <h2>6. Obligaciones</h2>
+            <p>El arrendatario se obliga a mantener la propiedad en buen estado y destinarla exclusivamente a uso habitacional.</p>
+        </section>
+
+        <section>
+            <h2>7. Firma</h2>
+            <p>Documento generado electrónicamente en Santiago, Chile a fecha {{CONTRACT_DATE}}.</p>
+            <div class="signature-container">
+                <div class="signature-box">
+                    Firma Arrendador<br>
+                    {{OWNER_SIGNED}}
+                </div>
+                <div class="signature-box">
+                    Firma Arrendatario<br>
+                    {{TENANT_SIGNED}}
+                </div>
+            </div>
+        </section>
+
+        <div class="footer">
+            Generado por PagoRenta.cl
+        </div>
+    </div>
+</body>
+</html>

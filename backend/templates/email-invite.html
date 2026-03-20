@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        .container { font-family: 'Inter', sans-serif; padding: 20px; color: #0F172A; }
+        .btn { display: inline-block; padding: 12px 24px; background-color: #2563EB; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; }
+        .footer { font-size: 12px; color: #64748B; margin-top: 20px; border-top: 1px solid #E2E8F0; padding-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Hola {{TENANT_NAME}},</h2>
+        <p>Tienes un contrato de arriendo pendiente de firma de parte de <strong>{{OWNER_NAME}}</strong> para la propiedad ubicada en <strong>{{PROPERTY_ADDRESS}}</strong>.</p>
+
+        <p><strong>Detalles del contrato:</strong></p>
+        <ul>
+            <li>Renta mensual: {{RENT_AMOUNT_FORMATTED}}</li>
+            <li>Fecha inicio: {{START_DATE}}</li>
+            <li>Fecha fin: {{END_DATE}}</li>
+        </ul>
+
+        <p><a href="{{INVITE_URL}}" class="btn">Revisar y firmar contrato →</a></p>
+
+        <p>Si el botón no funciona, copia y pega el siguiente link en tu navegador: {{INVITE_URL}}</p>
+
+        <div class="footer">
+            Este link expira en 7 días.<br>
+            Generado por PagoRenta.cl
+        </div>
+    </div>
+</body>
+</html>

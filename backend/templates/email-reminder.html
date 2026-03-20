@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        .container { font-family: 'Inter', sans-serif; padding: 20px; color: #0F172A; }
+        .btn { display: inline-block; padding: 12px 24px; background-color: #2563EB; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; }
+        .footer { font-size: 12px; color: #64748B; margin-top: 20px; border-top: 1px solid #E2E8F0; padding-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Hola,</h2>
+        <p>Tu arriendo correspondiente a la propiedad <strong>{{PROPERTY_ADDRESS}}</strong> vence en 3 días.</p>
+
+        <p><strong>Detalles del pago:</strong></p>
+        <ul>
+            <li>Monto: {{AMOUNT_DUE}}</li>
+            <li>Fecha de vencimiento: {{DUE_DATE}}</li>
+        </ul>
+
+        <p><a href="{{KHIPU_URL}}" class="btn">Pagar ahora →</a></p>
+
+        <p>Si ya pagaste, ignora este mensaje.</p>
+
+        <div class="footer">
+            Generado por PagoRenta.cl
+        </div>
+    </div>
+</body>
+</html>
