@@ -57,6 +57,26 @@ const ContractsPage = () => {
   }, [location.state]);
 
   const handleCreateContract = async (data) => {
+    if (isDemoMode) {
+      const newContract = {
+        id: Date.now().toString(),
+        property_id: data.property_id,
+        property_address: properties.find(p => p.id === data.property_id)?.address || 'Propiedad demo',
+        tenant_name: data.tenant_name,
+        tenant_rut: data.tenant_rut,
+        tenant_email: data.tenant_email,
+        rent_amount: parseInt(data.rent_amount),
+        payment_day: parseInt(data.payment_day),
+        start_date: data.start_date,
+        end_date: data.end_date,
+        status: 'pending_signature',
+        deposit_amount: parseInt(data.deposit_amount)
+      };
+      setContracts(prev => [newContract, ...prev]);
+      setSuccess('Contrato creado en modo demo ✓');
+      setIsModalOpen(false);
+      return;
+    }
     setSubmitting(true);
     try {
       await api.post('/contracts', data);
@@ -75,6 +95,10 @@ const ContractsPage = () => {
   };
 
   const handleResendInvite = async (id) => {
+    if (isDemoMode) {
+      setSuccess('Invitación reenviada (Simulado)');
+      return;
+    }
     try {
       await api.post(`/contracts/${id}/resend-invite`);
       setSuccess('Invitación reenviada exitosamente');
@@ -85,6 +109,11 @@ const ContractsPage = () => {
 
   const handleTerminate = async (id) => {
     if (!window.confirm('¿Estás seguro de que deseas terminar este contrato?')) return;
+    if (isDemoMode) {
+      setContracts(prev => prev.map(c => c.id === id ? { ...c, status: 'terminated' } : c));
+      setSuccess('Contrato terminado (Simulado)');
+      return;
+    }
     try {
       await api.patch(`/contracts/${id}/status`, { status: 'terminated' });
       setSuccess('Contrato terminado');
@@ -103,7 +132,7 @@ const ContractsPage = () => {
       {isDemoMode && (
         <div className="bg-gold/10 border-2 border-gold/20 p-4 rounded-xl flex items-center gap-3 text-gold">
           <AlertCircle size={20} />
-          <p className="text-sm font-bold uppercase tracking-tight">Modo Demo: Solo lectura.</p>
+          <p className="text-sm font-bold uppercase tracking-tight">🎭 Modo Demo — Los datos son de ejemplo. Todas las acciones funcionan localmente. Crea tu cuenta para usar con tus propiedades reales.</p>
         </div>
       )}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">

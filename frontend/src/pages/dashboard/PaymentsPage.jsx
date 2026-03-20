@@ -51,6 +51,11 @@ const PaymentsPage = () => {
   }, [isDemoMode]);
 
   const handleGenerateLink = async (id) => {
+    if (isDemoMode) {
+      window.open('https://khipu.com/dummy-payment-link', '_blank');
+      setSuccess('Link de pago generado (Simulado)');
+      return;
+    }
     try {
       const res = await api.post(`/payments/${id}/generate-link`);
       window.open(res.data.paymentUrl, '_blank');
@@ -62,6 +67,11 @@ const PaymentsPage = () => {
 
   const handleMarkPaid = async (id) => {
     if (!window.confirm('¿Deseas marcar este pago como pagado manualmente?')) return;
+    if (isDemoMode) {
+      setPayments(prev => prev.map(p => p.id === id ? { ...p, status: 'paid' } : p));
+      setSuccess('Pago marcado como pagado (Simulado)');
+      return;
+    }
     try {
       await api.post(`/payments/${id}/mark-paid`, { payment_method: 'manual' });
       setSuccess('Pago marcado como pagado');
@@ -80,7 +90,7 @@ const PaymentsPage = () => {
       {isDemoMode && (
         <div className="bg-gold/10 border-2 border-gold/20 p-4 rounded-xl flex items-center gap-3 text-gold">
           <AlertCircle size={20} />
-          <p className="text-sm font-bold uppercase tracking-tight">Modo Demo: Solo lectura.</p>
+          <p className="text-sm font-bold uppercase tracking-tight">🎭 Modo Demo — Los datos son de ejemplo. Todas las acciones funcionan localmente. Crea tu cuenta para usar con tus propiedades reales.</p>
         </div>
       )}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

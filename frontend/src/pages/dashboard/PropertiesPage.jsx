@@ -43,6 +43,17 @@ const PropertiesPage = () => {
   }, [isDemoMode]);
 
   const handleCreateProperty = async (data) => {
+    if (isDemoMode) {
+      const newProperty = {
+        id: Date.now().toString(),
+        ...data,
+        active_contract_status: null,
+        contract_count: 0
+      };
+      setProperties(prev => [newProperty, ...prev]);
+      setIsModalOpen(false);
+      return;
+    }
     setSubmitting(true);
     try {
       await api.post('/properties', data);
@@ -66,7 +77,7 @@ const PropertiesPage = () => {
       {isDemoMode && (
         <div className="bg-gold/10 border-2 border-gold/20 p-4 rounded-xl flex items-center gap-3 text-gold">
           <AlertCircle size={20} />
-          <p className="text-sm font-bold uppercase tracking-tight">Modo Demo: Solo lectura.</p>
+          <p className="text-sm font-bold uppercase tracking-tight">🎭 Modo Demo — Los datos son de ejemplo. Todas las acciones funcionan localmente. Crea tu cuenta para usar con tus propiedades reales.</p>
         </div>
       )}
       <div className="flex justify-between items-center">

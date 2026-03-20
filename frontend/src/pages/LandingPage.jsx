@@ -40,6 +40,13 @@ const LandingPage = () => {
     )
     document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => observer.observe(el))
 
+    // Fallback: after 1 second, add "visible" to ALL reveal elements regardless
+    const timeoutId = setTimeout(() => {
+      document.querySelectorAll(
+        '.reveal, .reveal-left, .reveal-right'
+      ).forEach(el => el.classList.add('visible'))
+    }, 1000)
+
     // 2. Animated number counter
     const countObserver = new IntersectionObserver(
       (entries) => {
@@ -86,6 +93,7 @@ const LandingPage = () => {
       observer.disconnect()
       countObserver.disconnect()
       window.removeEventListener('scroll', handleScroll)
+      clearTimeout(timeoutId)
     }
   }, [])
 
@@ -127,28 +135,21 @@ const LandingPage = () => {
         </svg>
       </div>
 
-      {/* Floating Decorative Elements */}
-      <div className="fixed bottom-0 right-0 w-1/2 h-1/2 pointer-events-none z-0 hidden lg:block">
-        <div className="absolute bottom-20 right-20 w-64 h-96 border border-white/5 animate-float" style={{ animationDelay: '0s' }}></div>
-        <div className="absolute bottom-40 right-40 w-80 h-80 border border-white/5 animate-float" style={{ animationDelay: '1s', transform: 'rotate(15deg)' }}></div>
-        <div className="absolute bottom-10 right-60 w-48 h-64 border border-white/5 animate-float" style={{ animationDelay: '2s', transform: 'rotate(-10deg)' }}></div>
-      </div>
-
       {/* Navbar */}
       <nav id="navbar" className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-5 px-6 md:px-12 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-gold rounded-full flex items-center justify-center text-primary-dark font-black text-xl italic shadow-lg shadow-gold/20">P</div>
-          <span className="text-2xl font-bold font-playfair tracking-tight">PagoRenta</span>
+          <span className="text-2xl font-bold font-playfair tracking-tight text-white">PagoRenta</span>
         </div>
 
         <div className="hidden md:flex items-center gap-8">
-          <a href="#producto" className="text-sm font-medium hover:text-gold transition-colors">Producto</a>
-          <a href="#precios" className="text-sm font-medium hover:text-gold transition-colors">Precios</a>
-          <a href="#funciona" className="text-sm font-medium hover:text-gold transition-colors">Cómo funciona</a>
+          <a href="#producto" className="text-sm font-medium text-white/80 hover:text-gold transition-colors">Producto</a>
+          <a href="#precios" className="text-sm font-medium text-white/80 hover:text-gold transition-colors">Precios</a>
+          <a href="#funciona" className="text-sm font-medium text-white/80 hover:text-gold transition-colors">Cómo funciona</a>
         </div>
 
         <div className="hidden md:flex items-center gap-4">
-          <Link to="/login" className="text-sm font-bold hover:text-gold transition-colors px-4 py-2">Iniciar sesión</Link>
+          <Link to="/login" className="text-sm font-bold text-white hover:text-gold transition-colors px-4 py-2">Iniciar sesión</Link>
           <Link to="/register" className="bg-gold text-dark font-black text-sm px-6 py-2.5 rounded-full hover:scale-105 transition-all shadow-lg shadow-gold/20">Empieza gratis</Link>
         </div>
 
@@ -159,103 +160,137 @@ const LandingPage = () => {
         {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="absolute top-full left-0 right-0 bg-dark border-b border-white/10 p-6 flex flex-col gap-6 md:hidden animate-fade-up">
-            <a href="#producto" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium">Producto</a>
-            <a href="#precios" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium">Precios</a>
-            <a href="#funciona" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium">Cómo funciona</a>
+            <a href="#producto" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium text-white">Producto</a>
+            <a href="#precios" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium text-white">Precios</a>
+            <a href="#funciona" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium text-white">Cómo funciona</a>
             <hr className="border-white/10" />
-            <Link to="/login" className="text-lg font-bold">Iniciar sesión</Link>
+            <Link to="/login" className="text-lg font-bold text-white">Iniciar sesión</Link>
             <Link to="/register" className="bg-gold text-dark text-center font-black text-lg px-6 py-4 rounded-xl">Empieza gratis</Link>
           </div>
         )}
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-40 pb-20 md:pt-52 md:pb-32 px-6 md:px-12 max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-20 overflow-hidden z-10">
-        <div className="flex-1 max-w-2xl text-center lg:text-left">
-          <div className="inline-flex items-center gap-3 bg-white/5 border border-gold/30 rounded-full px-4 py-2 mb-8 animate-fade-up">
-             <span className="relative flex h-3 w-3">
-               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-75"></span>
-               <span className="relative inline-flex rounded-full h-3 w-3 bg-gold"></span>
-             </span>
-             <span className="text-xs font-black text-gold uppercase tracking-widest italic">🇨🇱 Diseñado para Chile · Sin corretaje</span>
-          </div>
+      <section className="relative min-h-screen flex items-center pt-20 overflow-hidden z-10">
+        {/* Bonus SVG Background Pattern */}
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='white' stroke-opacity='0.05' stroke-width='1'%3E%3Cpath d='M0 0h60v60H0z'/%3E%3Cpath d='M30 0v60M0 30h60'/%3E%3C/g%3E%3C/svg%3E")`,
+          backgroundSize: '60px 60px',
+          pointerEvents: 'none',
+          zIndex: -1
+        }} />
 
-          <h1 className="text-6xl md:text-8xl font-black font-playfair leading-[1.1] mb-8">
-            <span className="block animate-fade-up" style={{ animationDelay: '0s' }}>Arrienda sin</span>
-            <span className="block animate-fade-up" style={{ animationDelay: '0.1s' }}>corredora.</span>
-            <span className="block animate-fade-up italic text-gold" style={{ animationDelay: '0.2s' }}>Cobra sin</span>
-            <span className="block animate-fade-up italic text-gold" style={{ animationDelay: '0.3s' }}>preocuparte.</span>
-          </h1>
-
-          <p className="text-lg md:text-xl text-white/60 mb-12 max-w-lg mx-auto lg:mx-0 leading-relaxed animate-fade-up" style={{ animationDelay: '0.4s' }}>
-            Contrato digital con validez legal, cobro automático vía Khipu y gestión completa. El estándar de oro para el propietario moderno.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6 animate-fade-up" style={{ animationDelay: '0.5s' }}>
-            <Link to="/register" className="w-full sm:w-auto bg-gold text-dark font-black text-lg px-10 py-5 rounded-full hover:scale-105 transition-all shadow-xl shadow-gold/20 flex items-center justify-center gap-2">
-              Empieza gratis 14 días <ArrowRight size={20} />
-            </Link>
-            <button onClick={handleDemo} className="w-full sm:w-auto border border-white/20 text-white font-bold text-lg px-10 py-5 rounded-full hover:bg-white hover:text-dark transition-all flex items-center justify-center gap-2">
-              <Play size={18} fill="currentColor" /> Ver demo
-            </button>
-          </div>
-
-          <div className="mt-10 flex items-center justify-center lg:justify-start gap-8 text-white/40 text-xs font-bold uppercase tracking-widest animate-fade-up" style={{ animationDelay: '0.6s' }}>
-             <span className="flex items-center gap-2"><CheckCircle2 size={14} className="text-gold" /> Sin tarjeta</span>
-             <span className="flex items-center gap-2"><CheckCircle2 size={14} className="text-gold" /> Cancela cuando quieras</span>
-          </div>
+        {/* Abstract building decorations */}
+        <div style={{
+          position:'absolute', bottom:'40px', right:'20px',
+          opacity: 0.06,
+          pointerEvents: 'none',
+          zIndex: -1
+        }}>
+          {[160,120,80].map((size, i) => (
+            <div key={i} style={{
+              position:'absolute',
+              width: size+'px', height: size*1.4+'px',
+              border: '1px solid white',
+              borderRadius: '2px',
+              bottom: i*20+'px',
+              right: i*24+'px',
+              transform: `rotate(${i*3-3}deg)`
+            }}/>
+          ))}
         </div>
 
-        {/* Right Side Mockup */}
-        <div className="flex-1 relative w-full max-w-lg lg:max-w-none animate-fade-right" style={{ animationDelay: '0.7s' }}>
-          <div className="bg-white rounded-3xl shadow-2xl p-4 md:p-8 animate-float z-10 relative">
-             <div className="bg-slate-50 rounded-2xl overflow-hidden border border-slate-200">
-                <div className="h-10 bg-white border-b border-slate-100 flex items-center px-4 gap-2">
-                   <div className="w-2.5 h-2.5 rounded-full bg-slate-200"></div>
-                   <div className="w-2.5 h-2.5 rounded-full bg-slate-200"></div>
-                   <div className="w-2.5 h-2.5 rounded-full bg-slate-200"></div>
-                </div>
-                <div className="flex">
-                   <div className="w-32 md:w-40 bg-slate-900 h-64 p-4 space-y-4">
+        <div className="max-w-7xl mx-auto px-6 md:px-12 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="max-w-2xl text-center lg:text-left">
+              <div className="inline-flex items-center gap-3 bg-white/5 border border-gold/30 rounded-full px-4 py-2 mb-8 animate-fade-up text-gold">
+                <span className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-gold"></span>
+                </span>
+                <span className="text-xs font-black uppercase tracking-widest italic">🇨🇱 Diseñado para Chile · Sin corretaje</span>
+              </div>
+
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black font-playfair leading-[1.1] mb-8 text-white">
+                <span className="block animate-fade-up" style={{ animationDelay: '0s' }}>Arrienda sin</span>
+                <span className="block animate-fade-up" style={{ animationDelay: '0.1s' }}>corredora.</span>
+                <span className="block animate-fade-up italic text-gold" style={{ animationDelay: '0.2s' }}>Cobra sin</span>
+                <span className="block animate-fade-up italic text-gold" style={{ animationDelay: '0.3s' }}>preocuparte.</span>
+              </h1>
+
+              <p className="text-lg md:text-xl text-white/60 mb-12 max-w-lg mx-auto lg:mx-0 leading-relaxed animate-fade-up" style={{ animationDelay: '0.4s' }}>
+                Contrato digital con validez legal, cobro automático vía Khipu y gestión completa. El estándar de oro para el propietario moderno.
+              </p>
+
+              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6 animate-fade-up" style={{ animationDelay: '0.5s' }}>
+                <Link to="/register" className="w-full sm:w-auto bg-gold text-dark font-black text-lg px-10 py-5 rounded-full hover:scale-105 transition-all shadow-xl shadow-gold/20 flex items-center justify-center gap-2">
+                  Empieza gratis 14 días <ArrowRight size={20} />
+                </Link>
+                <button onClick={handleDemo} className="w-full sm:w-auto border border-white/20 text-white font-bold text-lg px-10 py-5 rounded-full hover:bg-white hover:text-dark transition-all flex items-center justify-center gap-2">
+                  <Play size={18} fill="currentColor" /> Ver demo
+                </button>
+              </div>
+
+              <div className="mt-10 flex items-center justify-center lg:justify-start gap-8 text-white/40 text-xs font-bold uppercase tracking-widest animate-fade-up" style={{ animationDelay: '0.6s' }}>
+                <span className="flex items-center gap-2"><CheckCircle2 size={14} className="text-gold" /> Sin tarjeta</span>
+                <span className="flex items-center gap-2"><CheckCircle2 size={14} className="text-gold" /> Cancela cuando quieras</span>
+              </div>
+            </div>
+
+            {/* Right Side Mockup */}
+            <div className="relative w-full animate-fade-right hidden lg:block" style={{ animationDelay: '0.7s' }}>
+              <div className="bg-white rounded-3xl shadow-2xl p-8 animate-float z-10 relative">
+                <div className="bg-slate-50 rounded-2xl overflow-hidden border border-slate-200">
+                  <div className="h-10 bg-white border-b border-slate-100 flex items-center px-4 gap-2">
+                    <div className="w-2.5 h-2.5 rounded-full bg-slate-200"></div>
+                    <div className="w-2.5 h-2.5 rounded-full bg-slate-200"></div>
+                    <div className="w-2.5 h-2.5 rounded-full bg-slate-200"></div>
+                  </div>
+                  <div className="flex">
+                    <div className="w-40 bg-slate-900 h-64 p-4 space-y-4">
                       <div className="w-full h-2 bg-white/10 rounded"></div>
                       <div className="w-3/4 h-2 bg-white/10 rounded"></div>
                       <div className="w-5/6 h-2 bg-primary rounded shadow-sm shadow-primary/40"></div>
-                   </div>
-                   <div className="flex-1 p-6 space-y-6">
+                    </div>
+                    <div className="flex-1 p-6 space-y-6 text-dark">
                       <div className="flex gap-3">
-                         <div className="w-full h-12 bg-white rounded-xl border border-slate-100 p-2">
-                            <div className="w-1/2 h-1.5 bg-slate-100 rounded mb-2"></div>
-                            <div className="w-3/4 h-2 bg-slate-200 rounded"></div>
-                         </div>
-                         <div className="w-full h-12 bg-white rounded-xl border border-slate-100 p-2">
-                            <div className="w-1/2 h-1.5 bg-slate-100 rounded mb-2"></div>
-                            <div className="w-3/4 h-2 bg-slate-200 rounded"></div>
-                         </div>
+                        <div className="w-full h-12 bg-white rounded-xl border border-slate-100 p-2">
+                          <div className="w-1/2 h-1.5 bg-slate-100 rounded mb-2"></div>
+                          <div className="w-3/4 h-2 bg-slate-200 rounded"></div>
+                        </div>
+                        <div className="w-full h-12 bg-white rounded-xl border border-slate-100 p-2">
+                          <div className="w-1/2 h-1.5 bg-slate-100 rounded mb-2"></div>
+                          <div className="w-3/4 h-2 bg-slate-200 rounded"></div>
+                        </div>
                       </div>
                       <div className="space-y-3">
-                         <div className="h-10 bg-white rounded-xl border border-slate-100 flex items-center px-4">
-                            <div className="w-full h-2 bg-slate-50 rounded"></div>
-                         </div>
-                         <div className="h-10 bg-white rounded-xl border border-slate-100 flex items-center px-4">
-                            <div className="w-full h-2 bg-slate-50 rounded"></div>
-                         </div>
+                        <div className="h-10 bg-white rounded-xl border border-slate-100 flex items-center px-4">
+                          <div className="w-full h-2 bg-slate-50 rounded"></div>
+                        </div>
+                        <div className="h-10 bg-white rounded-xl border border-slate-100 flex items-center px-4">
+                          <div className="w-full h-2 bg-slate-50 rounded"></div>
+                        </div>
                       </div>
                       <div className="bg-success/10 text-success text-[10px] font-bold py-2 px-4 rounded-full inline-flex items-center gap-2 animate-bounce">
-                         <CheckCircle2 size={12} /> Pago recibido: Mesa 1, Providencia
+                        <CheckCircle2 size={12} /> Pago recibido: Mesa 1, Providencia
                       </div>
-                   </div>
+                    </div>
+                  </div>
                 </div>
-             </div>
-          </div>
+              </div>
 
-          {/* Floating Small Cards */}
-          <div className="absolute -bottom-10 -left-10 bg-dark border border-white/10 p-5 rounded-2xl shadow-2xl animate-float z-20" style={{ animationDelay: '1.5s' }}>
-             <p className="text-gold font-black text-xl">$550.000</p>
-             <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest">Cobrado hoy</p>
-          </div>
-          <div className="absolute -top-10 -right-5 bg-primary text-white p-5 rounded-2xl shadow-2xl animate-float z-0" style={{ animationDelay: '2.5s' }}>
-             <p className="font-bold flex items-center gap-2"><Check size={16} /> Contrato activo</p>
-             <p className="text-white/60 text-[10px] uppercase font-bold tracking-widest mt-1">Mesa 1, Providencia</p>
+              {/* Floating Small Cards */}
+              <div className="absolute -bottom-10 -left-10 bg-dark border border-white/10 p-5 rounded-2xl shadow-2xl animate-float z-20" style={{ animationDelay: '1.5s' }}>
+                <p className="text-gold font-black text-xl">$550.000</p>
+                <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest">Cobrado hoy</p>
+              </div>
+              <div className="absolute -top-10 -right-5 bg-primary text-white p-5 rounded-2xl shadow-2xl animate-float z-0" style={{ animationDelay: '2.5s' }}>
+                <p className="font-bold flex items-center gap-2"><Check size={16} /> Contrato activo</p>
+                <p className="text-white/60 text-[10px] uppercase font-bold tracking-widest mt-1">Mesa 1, Providencia</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -418,7 +453,7 @@ const LandingPage = () => {
       {/* Final CTA */}
       <section className="bg-dark py-40 px-6 text-center relative overflow-hidden">
         <div className="max-w-4xl mx-auto relative z-10 reveal">
-          <h2 className="text-5xl md:text-8xl font-black font-playfair mb-8 italic tracking-tighter leading-none">
+          <h2 className="text-5xl md:text-8xl font-black font-playfair mb-8 italic tracking-tighter leading-none text-white">
             Tu arriendo.<br />
             <span className="text-gold">Tu control.</span>
           </h2>
@@ -442,7 +477,7 @@ const LandingPage = () => {
           <div className="col-span-1 md:col-span-1">
             <div className="flex items-center gap-3 mb-8 opacity-80">
               <div className="w-8 h-8 bg-gold rounded-full flex items-center justify-center text-dark font-black text-sm italic">P</div>
-              <span className="text-xl font-bold font-playfair">PagoRenta</span>
+              <span className="text-xl font-bold font-playfair text-white">PagoRenta</span>
             </div>
             <p className="text-sm text-white/40 leading-relaxed max-w-xs mb-8 italic">Reinventando la gestión inmobiliaria en Chile con tecnología y transparencia.</p>
             <p className="text-xs text-white/20 font-bold uppercase tracking-widest">© 2026 PagoRenta SpA</p>

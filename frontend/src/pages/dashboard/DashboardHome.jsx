@@ -53,6 +53,10 @@ const DashboardHome = () => {
   }, [isDemoMode]);
 
   const handleGenerateLink = async (paymentId) => {
+    if (isDemoMode) {
+      window.open('https://khipu.com/dummy-payment-link', '_blank');
+      return;
+    }
     try {
       const res = await api.post(`/payments/${paymentId}/generate-link`);
       window.open(res.data.paymentUrl, '_blank');
@@ -68,7 +72,7 @@ const DashboardHome = () => {
       {isDemoMode && (
         <div className="bg-gold/10 border-2 border-gold/20 p-4 rounded-xl flex items-center gap-3 text-gold">
           <AlertCircle size={20} />
-          <p className="text-sm font-bold uppercase tracking-tight">Estás en Modo Demo. Los datos mostrados son de ejemplo y no se realizarán llamadas a la API.</p>
+          <p className="text-sm font-bold uppercase tracking-tight">🎭 Modo Demo — Los datos son de ejemplo. Todas las acciones funcionan localmente. Crea tu cuenta para usar con tus propiedades reales.</p>
         </div>
       )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
