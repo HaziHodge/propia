@@ -2,6 +2,7 @@ import React from 'react';
 import { FileText, User, Building, Calendar, DollarSign, ShieldAlert, Download } from 'lucide-react';
 import { formatCLP } from '../../utils/formatCLP';
 import { formatDate } from '../../utils/formatDate';
+import { generateContractPdf } from '../../utils/generateContractPdf';
 
 const ContractViewer = ({ contract }) => {
   return (
@@ -16,7 +17,7 @@ const ContractViewer = ({ contract }) => {
         </div>
         <button
           className="flex items-center gap-2 bg-white border border-slate-200 text-slate-700 px-5 py-2.5 rounded-xl text-sm font-bold hover:text-primary hover:border-primary transition-all shadow-sm"
-          onClick={() => window.open(`${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/tenant/contract/pdf/${contract.id}`, '_blank')}
+          onClick={() => generateContractPdf(contract)}
         >
           <Download size={18} /> Ver PDF Completo
         </button>

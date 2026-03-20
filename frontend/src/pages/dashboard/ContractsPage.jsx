@@ -9,6 +9,7 @@ import LoadingSpinner from '../../components/shared/LoadingSpinner';
 import Toast from '../../components/shared/Toast';
 import { Plus, FileText } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
+import { generateContractPdf } from '../../utils/generateContractPdf';
 
 const ContractsPage = () => {
   const isDemoMode = useAuthStore(state => state.isDemoMode);
@@ -90,8 +91,8 @@ const ContractsPage = () => {
     }
   };
 
-  const handleDownload = (id) => {
-    window.open(`${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/contracts/${id}/pdf`, '_blank');
+  const handleDownload = (contract) => {
+    generateContractPdf(contract);
   };
 
   const handleResendInvite = async (id) => {
@@ -171,7 +172,7 @@ const ContractsPage = () => {
             <ContractCard
               key={c.id}
               contract={c}
-              onDownload={handleDownload}
+              onDownload={() => handleDownload(c)}
               onResendInvite={handleResendInvite}
               onTerminate={handleTerminate}
             />

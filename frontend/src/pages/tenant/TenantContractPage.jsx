@@ -6,6 +6,7 @@ import SignatureConfirm from '../../components/tenant/SignatureConfirm';
 import LoadingSpinner from '../../components/shared/LoadingSpinner';
 import Toast from '../../components/shared/Toast';
 import { CheckCircle2, Download, ExternalLink, CreditCard, AlertTriangle } from 'lucide-react';
+import { generateContractPdf } from '../../utils/generateContractPdf';
 
 const TenantContractPage = () => {
   const { token } = useParams();
@@ -80,7 +81,7 @@ const TenantContractPage = () => {
       <div className="grid sm:grid-cols-2 gap-6 w-full max-w-2xl">
         <button
           className="bg-white border-2 border-slate-200 text-slate-800 px-8 py-5 rounded-2xl font-black text-lg hover:border-primary hover:text-primary transition-all shadow-lg flex items-center justify-center gap-3"
-          onClick={() => window.open(`${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/tenant/contract/pdf/${contractData.contract.id}`, '_blank')}
+          onClick={() => generateContractPdf(contractData.contract)}
         >
           <Download size={24} /> Descargar Contrato
         </button>
